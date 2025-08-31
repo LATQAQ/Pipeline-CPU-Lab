@@ -1,0 +1,14 @@
+0.6
+2019.2
+Nov  6 2019
+21:57:16
+D:/Code/CPU_Pipeline/CPU_Pipeline.sim/sim_1/behav/xsim/glbl.v,1573089660,verilog,,,,glbl,,,,,,,,
+D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sim_1/new/tb1.v,1756454105,verilog,,,,tb1,,,,,,,,
+D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/ALU.v,1756454380,verilog,,D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/BrUnit.v,,ALU,,,,,,,,
+D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/BrUnit.v,1756448287,verilog,,D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Control.v,,BrUnit,,,,,,,,
+D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Control.v,1756455931,verilog,,D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Dmem.v,,Control,,,,,,,,
+D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Dmem.v,1756366457,verilog,,D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Imem.v,,Dmem,,,,,,,,
+D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Imem.v,1756451468,verilog,,D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/PC.v,,Imem,,,,,,,,
+D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/PC.v,1756369897,verilog,,D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Regfile.v,,PC,,,,,,,,
+D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Regfile.v,1756453771,verilog,,D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/TopCpu.v,,Regfile,,,,,,,,
+D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/TopCpu.v,1756454407,verilog,,D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sim_1/new/tb1.v,,TopCpu,,,,,,,,
