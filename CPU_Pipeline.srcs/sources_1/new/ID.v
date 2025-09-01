@@ -28,7 +28,7 @@ module ID(
         // bus from IF
         input  [`IF_ID_BUS_WIDTH-1:0] if_id_bus,
         // bus from WB
-        input [`WB_ID_BUS_WIDTH-1:0] wb_id_bus
+        input [`WB_ID_BUS_WIDTH-1:0] wb_id_bus,
         // bus to IF
         output [`ID_IF_BUS_WIDTH-1:0] id_if_bus,
         // bus to EX

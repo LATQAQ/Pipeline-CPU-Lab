@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "CPU_Pipeline_Header.vh"
 //////////////////////////////////////////////////////////////////////////////////
 // Company:
 // Engineer: Li Zijian
@@ -76,13 +77,13 @@ module EX(
         begin
             case (alu_src)
                 2'b00:
-                    getAluInput = rd;
+                    getALUInput = rd;
                 2'b01:
-                    getAluInput = imm;
+                    getALUInput = imm;
                 2'b10:
-                    getAluInput = 32'h0000_0004;
+                    getALUInput = 32'h0000_0004;
                 default:
-                    getAluInput = rd;
+                    getALUInput = rd;
             endcase
         end
     endfunction

@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "CPU_Pipeline_Header.vh"
 //////////////////////////////////////////////////////////////////////////////////
 // Company:
 // Engineer: Li Zijian
@@ -27,7 +28,7 @@ module MEM(
         // bus from EX
         input  [`EX_MEM_BUS_WIDTH-1:0] ex_mem_bus,
         // bus to WB
-        output [`MEM_WB_BUS_WIDTH-1:0] mem_wb_bus
+        output [`MEM_WB_BUS_WIDTH-1:0] mem_wb_bus,
 
         // data_mem interface
         output data_mem_ena,
