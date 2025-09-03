@@ -25,6 +25,12 @@ module MEM(
         input wire clk,
         input wire rst,
 
+        // pipeline control
+        input ex_mem_valid,
+        input wb_allow_in,
+        output mem_allow_in,
+        output mem_wb_valid,
+
         // bus from EX
         input  [`EX_MEM_BUS_WIDTH-1:0] ex_mem_bus,
         // bus to WB
@@ -55,8 +61,25 @@ module MEM(
     wire [31:0] mem_final_result;
     assign mem_wb_bus = {mem_pc, mem_final_result, mem_waddr,mem_reg_write};
 
+    // pipeline control
+    reg mem_valid;
+    wire mem_ready_go;
+
+    assign mem_ready_go = 1'b1;
+    assign mem_allow_in = ~mem_valid | (mem_ready_go & wb_allow_in);
+    assign mem_wb_valid = mem_valid & mem_ready_go;
+
     always @(posedge clk) begin
-        begin
+        if (rst) begin
+            mem_valid <= 1'b0;
+        end
+        else if (mem_allow_in) begin
+            mem_valid <= ex_mem_valid;
+        end
+    end
+
+    always @(posedge clk) begin
+        if (mem_allow_in & ex_mem_valid) begin
             mem_reg <= ex_mem_bus;
         end
     end
@@ -65,7 +88,7 @@ module MEM(
     assign mem_final_result = mem_mem_to_reg ? mem_rdata : mem_alu_result;
 
     // data_mem interface
-    assign data_mem_ena = 1'b1;
+    assign data_mem_ena = mem_valid;
     assign data_mem_addra = mem_alu_result[11:2]; // word aligned
     assign data_mem_wea = mem_mem_write;
     assign data_mem_dina = mem_wdata;

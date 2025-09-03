@@ -25,6 +25,12 @@ module ID(
         input wire clk,
         input wire rst,
 
+        // pipeline control
+        input if_id_valid,
+        input ex_allow_in,
+        output id_allow_in,
+        output id_ex_valid,
+
         // bus from IF
         input  [`IF_ID_BUS_WIDTH-1:0] if_id_bus,
         // bus from WB
@@ -48,7 +54,7 @@ module ID(
     assign {wb_reg_write, wb_waddr, wb_final_result} = wb_id_bus;
 
     // output id_ex_bus
-    wire id_alu_control;
+    wire [4:0] id_alu_control;
     wire [1:0] id_alu_src;
     wire id_reg_dst;
     wire id_reg31;
@@ -88,8 +94,25 @@ module ID(
     wire [31:0] id_br_target;
     assign id_if_bus = {id_br_taken, id_br_target};
 
+    // pipeline control
+    reg id_valid;
+    wire id_ready_go;
+
+    assign id_ready_go = 1'b1;
+    assign id_allow_in = ~id_valid | (id_ready_go & ex_allow_in);
+    assign id_ex_valid = id_valid & id_ready_go;
+
     always @(posedge clk) begin
-        begin
+        if (rst) begin
+            id_valid <= 1'b0;
+        end
+        else if (id_allow_in) begin
+            id_valid <= if_id_valid;
+        end
+    end
+
+    always @(posedge clk) begin
+        if (id_allow_in & if_id_valid) begin
             id_reg <= if_id_bus;
         end
     end
@@ -253,9 +276,9 @@ module ID(
             );
 
     // Branch Decision
-    assign id_br_taken = (inst_beq & (id_rd1 == id_rd2)) |
-           (inst_bne & (id_rd1 != id_rd2)) |
-           inst_j | inst_jal | inst_jr | inst_jalr;
+    assign id_br_taken = id_valid & ( (inst_beq & (id_rd1 == id_rd2)) |
+                                      (inst_bne & (id_rd1 != id_rd2)) |
+                                      inst_j | inst_jal | inst_jr | inst_jalr );
 
     assign id_br_target = (inst_beq | inst_bne) ? (id_pc_plus4 + id_br_offset) :
            (inst_j | inst_jal) ? id_jump_addr :

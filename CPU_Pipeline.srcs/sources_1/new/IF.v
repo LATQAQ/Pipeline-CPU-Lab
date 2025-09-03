@@ -25,6 +25,10 @@ module IF(
         input wire clk,
         input wire rst,
 
+        // pipeline control
+        input id_allow_in,
+        output if_id_valid,
+
         // bus from ID
         input  [`ID_IF_BUS_WIDTH-1:0] id_if_bus,
         // bus to ID
@@ -46,6 +50,14 @@ module IF(
     wire [31:0] if_inst;
     assign if_id_bus = {if_pc, if_inst};
 
+    // pipeline control
+    wire if_valid;
+    wire if_ready_go;
+
+    assign if_valid = ~rst;
+    assign if_ready_go = 1'b1;
+    assign if_id_valid = if_valid & if_ready_go;
+
     // internal signals
     wire [31:0] pc_plus4, next_pc;
 
@@ -58,13 +70,13 @@ module IF(
         if (rst) begin
             if_pc <= 32'h0000_0000;
         end
-        else begin
+        else if (id_allow_in) begin
             if_pc <= next_pc;
         end
     end
 
     // inst_mem interface
-    assign inst_mem_ena = ~rst;
+    assign inst_mem_ena = if_valid;
     assign inst_mem_addra = if_pc[11:2]; // word aligned
     assign if_inst = inst_mem_douta;
 

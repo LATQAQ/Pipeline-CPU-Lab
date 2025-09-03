@@ -25,6 +25,12 @@ module EX(
         input wire clk,
         input wire rst,
 
+        // pipeline control
+        input id_ex_valid,
+        input mem_allow_in,
+        output ex_allow_in,
+        output ex_mem_valid,
+
         // bus from ID
         input  [`ID_EX_BUS_WIDTH-1:0] id_ex_bus,
         // bus to MEM
@@ -60,8 +66,25 @@ module EX(
     assign ex_mem_bus = {ex_pc, ex_alu_result, ex_wdata, ex_waddr,
                          ex_mem_to_reg, ex_reg_write, ex_mem_write};
 
+    // pipeline control
+    reg ex_valid;
+    wire ex_ready_go;
+
+    assign ex_ready_go = 1'b1;
+    assign ex_allow_in = ~ex_valid | (ex_ready_go & mem_allow_in);
+    assign ex_mem_valid = ex_valid & ex_ready_go;
+
     always @(posedge clk) begin
-        begin
+        if (rst) begin
+            ex_valid <= 1'b0;
+        end
+        else if (ex_allow_in) begin
+            ex_valid <= id_ex_valid;
+        end
+    end
+
+    always @(posedge clk) begin
+        if (ex_allow_in & id_ex_valid) begin
             ex_reg <= id_ex_bus;
         end
     end

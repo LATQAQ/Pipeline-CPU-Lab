@@ -1,0 +1,28 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/ip/data_mem/sim/data_mem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module data_mem
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/ip/inst_mem/sim/inst_mem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module inst_mem
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/ALU.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ALU
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/EX.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module EX
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/ID.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ID
+WARNING: [VRFC 10-3248] data object 'id_rd1' is already declared [D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/ID.v:265]
+WARNING: [VRFC 10-3703] second declaration of 'id_rd1' ignored [D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/ID.v:265]
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/IF.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module IF
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/MEM.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module MEM
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Pipeline_Top_CPU.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Pipeline_Top_CPU
+INFO: [VRFC 10-2458] undeclared symbol id_if_bus, assumed default net type wire [D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Pipeline_Top_CPU.v:43]
+WARNING: [VRFC 10-2938] 'id_if_bus' is already implicitly declared on line 43 [D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Pipeline_Top_CPU.v:58]
+INFO: [VRFC 10-2458] undeclared symbol wb_id_bus, assumed default net type wire [D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Pipeline_Top_CPU.v:73]
+WARNING: [VRFC 10-2938] 'wb_id_bus' is already implicitly declared on line 73 [D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Pipeline_Top_CPU.v:132]
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/Regfile.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Regfile
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/new/WB.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module WB
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sim_1/new/tb2.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb2

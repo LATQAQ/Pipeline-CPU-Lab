@@ -1,10 +1,10 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Mon Sep  1 16:24:07 2025
+-- Date        : Wed Sep  3 09:54:54 2025
 -- Host        : LAT running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim
---               d:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/ip/inst_mem/inst_mem_sim_netlist.vhdl
+--               D:/Code/CPU_Pipeline/CPU_Pipeline.srcs/sources_1/ip/inst_mem/inst_mem_sim_netlist.vhdl
 -- Design      : inst_mem
 -- Purpose     : This VHDL netlist is a functional simulation representation of the design and should not be modified or
 --               synthesized. This netlist cannot be used for SDF annotated simulation.
@@ -14,7 +14,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VCOMPONENTS.ALL;
-entity inst_mem_blk_mem_gen_prim_wrapper is
+entity inst_mem_blk_mem_gen_prim_wrapper_init is
   port (
     douta : out STD_LOGIC_VECTOR ( 31 downto 0 );
     clka : in STD_LOGIC;
@@ -22,10 +22,10 @@ entity inst_mem_blk_mem_gen_prim_wrapper is
     addra : in STD_LOGIC_VECTOR ( 9 downto 0 )
   );
   attribute ORIG_REF_NAME : string;
-  attribute ORIG_REF_NAME of inst_mem_blk_mem_gen_prim_wrapper : entity is "blk_mem_gen_prim_wrapper";
-end inst_mem_blk_mem_gen_prim_wrapper;
+  attribute ORIG_REF_NAME of inst_mem_blk_mem_gen_prim_wrapper_init : entity is "blk_mem_gen_prim_wrapper_init";
+end inst_mem_blk_mem_gen_prim_wrapper_init;
 
-architecture STRUCTURE of inst_mem_blk_mem_gen_prim_wrapper is
+architecture STRUCTURE of inst_mem_blk_mem_gen_prim_wrapper_init is
   signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_68\ : STD_LOGIC;
   signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_69\ : STD_LOGIC;
   signal \DEVICE_7SERIES.NO_BMM_INFO.SP.SIMPLE_PRIM36.ram_n_70\ : STD_LOGIC;
@@ -63,8 +63,8 @@ begin
       INITP_0D => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0E => X"0000000000000000000000000000000000000000000000000000000000000000",
       INITP_0F => X"0000000000000000000000000000000000000000000000000000000000000000",
-      INIT_00 => X"0000000000000000000000000000000000000000000000000000000000000000",
-      INIT_01 => X"0000000000000000000000000000000000000000000000000000000000000000",
+      INIT_00 => X"006820230109102134634BDE3C036CBC352958DE3C0951DD3508F3003C081ADE",
+      INIT_01 => X"0000000000000000000000000000000000000000000000000109302501092824",
       INIT_02 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_03 => X"0000000000000000000000000000000000000000000000000000000000000000",
       INIT_04 => X"0000000000000000000000000000000000000000000000000000000000000000",
@@ -276,7 +276,7 @@ end inst_mem_blk_mem_gen_prim_width;
 
 architecture STRUCTURE of inst_mem_blk_mem_gen_prim_width is
 begin
-\prim_noinit.ram\: entity work.inst_mem_blk_mem_gen_prim_wrapper
+\prim_init.ram\: entity work.inst_mem_blk_mem_gen_prim_wrapper_init
      port map (
       addra(9 downto 0) => addra(9 downto 0),
       clka => clka,
@@ -514,11 +514,11 @@ entity inst_mem_blk_mem_gen_v8_4_4 is
   attribute C_INIT_FILE : string;
   attribute C_INIT_FILE of inst_mem_blk_mem_gen_v8_4_4 : entity is "inst_mem.mem";
   attribute C_INIT_FILE_NAME : string;
-  attribute C_INIT_FILE_NAME of inst_mem_blk_mem_gen_v8_4_4 : entity is "no_coe_file_loaded";
+  attribute C_INIT_FILE_NAME of inst_mem_blk_mem_gen_v8_4_4 : entity is "inst_mem.mif";
   attribute C_INTERFACE_TYPE : integer;
   attribute C_INTERFACE_TYPE of inst_mem_blk_mem_gen_v8_4_4 : entity is 0;
   attribute C_LOAD_INIT_FILE : integer;
-  attribute C_LOAD_INIT_FILE of inst_mem_blk_mem_gen_v8_4_4 : entity is 0;
+  attribute C_LOAD_INIT_FILE of inst_mem_blk_mem_gen_v8_4_4 : entity is 1;
   attribute C_MEM_TYPE : integer;
   attribute C_MEM_TYPE of inst_mem_blk_mem_gen_v8_4_4 : entity is 3;
   attribute C_MUX_PIPELINE_STAGES : integer;
@@ -835,11 +835,11 @@ architecture STRUCTURE of inst_mem is
   attribute C_INIT_FILE : string;
   attribute C_INIT_FILE of U0 : label is "inst_mem.mem";
   attribute C_INIT_FILE_NAME : string;
-  attribute C_INIT_FILE_NAME of U0 : label is "no_coe_file_loaded";
+  attribute C_INIT_FILE_NAME of U0 : label is "inst_mem.mif";
   attribute C_INTERFACE_TYPE : integer;
   attribute C_INTERFACE_TYPE of U0 : label is 0;
   attribute C_LOAD_INIT_FILE : integer;
-  attribute C_LOAD_INIT_FILE of U0 : label is 0;
+  attribute C_LOAD_INIT_FILE of U0 : label is 1;
   attribute C_MEM_TYPE : integer;
   attribute C_MEM_TYPE of U0 : label is 3;
   attribute C_MUX_PIPELINE_STAGES : integer;
