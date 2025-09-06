@@ -57,6 +57,8 @@ module Pipeline_Top_CPU(
     // ID stage
     wire [`ID_IF_BUS_WIDTH-1:0] id_if_bus;
     wire [`ID_EX_BUS_WIDTH-1:0] id_ex_bus;
+    wire [`EX_ID_BUS_WIDTH-1:0] ex_id_bus;
+    wire [`MEM_ID_BUS_WIDTH-1:0] mem_id_bus;
 
     wire ex_allow_in;
     wire id_ex_valid;
@@ -69,6 +71,8 @@ module Pipeline_Top_CPU(
            .ex_allow_in(ex_allow_in),
            .id_allow_in(id_allow_in),
            .id_ex_valid(id_ex_valid),
+           .ex_id_bus(ex_id_bus),
+           .mem_id_bus(mem_id_bus),
            .if_id_bus(if_id_bus),
            .wb_id_bus(wb_id_bus),
            .id_if_bus(id_if_bus),
@@ -80,6 +84,11 @@ module Pipeline_Top_CPU(
 
     wire mem_allow_in;
     wire ex_mem_valid;
+    wire data_mem_ena;
+    wire [9:0] data_mem_addra;
+    wire data_mem_wea;
+    wire [31:0] data_mem_dina;
+    wire [31:0] data_mem_douta;
 
     EX ex_stage(
            .clk(clk),
@@ -88,17 +97,27 @@ module Pipeline_Top_CPU(
            .mem_allow_in(mem_allow_in),
            .ex_allow_in(ex_allow_in),
            .ex_mem_valid(ex_mem_valid),
+           .ex_id_bus(ex_id_bus),
            .id_ex_bus(id_ex_bus),
-           .ex_mem_bus(ex_mem_bus)
+           .ex_mem_bus(ex_mem_bus),
+           .data_mem_ena(data_mem_ena),
+           .data_mem_addra(data_mem_addra),
+           .data_mem_wea(data_mem_wea),
+           .data_mem_dina(data_mem_dina)
        );
+
+    data_mem dmem(
+                 .clka(clk),
+                 .ena(data_mem_ena),
+                 .wea(data_mem_wea),
+                 .addra(data_mem_addra),
+                 .dina(data_mem_dina),
+                 .douta(data_mem_douta)
+             );
 
     // MEM stage
     wire [`MEM_WB_BUS_WIDTH-1:0] mem_wb_bus;
-    wire data_mem_ena;
-    wire [9:0] data_mem_addra;
-    wire data_mem_wea;
-    wire [31:0] data_mem_dina;
-    wire [31:0] data_mem_douta;
+
 
     wire mem_wb_valid;
     wire wb_allow_in;
@@ -110,23 +129,13 @@ module Pipeline_Top_CPU(
             .wb_allow_in(wb_allow_in),
             .mem_allow_in(mem_allow_in),
             .mem_wb_valid(mem_wb_valid),
+            .mem_id_bus(mem_id_bus),
             .ex_mem_bus(ex_mem_bus),
             .mem_wb_bus(mem_wb_bus),
-            .data_mem_ena(data_mem_ena),
-            .data_mem_addra(data_mem_addra),
-            .data_mem_wea(data_mem_wea),
-            .data_mem_dina(data_mem_dina),
             .data_mem_douta(data_mem_douta)
         );
 
-    data_mem dmem(
-                 .clka(clk),
-                 .ena(data_mem_ena),
-                 .wea(data_mem_wea),
-                 .addra(data_mem_addra),
-                 .dina(data_mem_dina),
-                 .douta(data_mem_douta)
-             );
+
 
     // WB stage
     wire [`WB_ID_BUS_WIDTH-1:0] wb_id_bus;

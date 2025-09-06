@@ -31,16 +31,15 @@ module MEM(
         output mem_allow_in,
         output mem_wb_valid,
 
+        // RAW hazard
+        input [`MEM_ID_BUS_WIDTH-1:0] mem_id_bus,
+
         // bus from EX
         input  [`EX_MEM_BUS_WIDTH-1:0] ex_mem_bus,
         // bus to WB
         output [`MEM_WB_BUS_WIDTH-1:0] mem_wb_bus,
 
         // data_mem interface
-        output data_mem_ena,
-        output [9:0] data_mem_addra,
-        output data_mem_wea,
-        output [31:0] data_mem_dina,
         input  [31:0] data_mem_douta
     );
 
@@ -48,12 +47,11 @@ module MEM(
     reg [`EX_MEM_BUS_WIDTH-1:0] mem_reg;
     wire [31:0] mem_pc;
     wire [31:0] mem_alu_result;
-    wire [31:0] mem_wdata;
     wire [4:0] mem_waddr;
     wire mem_mem_to_reg;
     wire mem_reg_write;
     wire mem_mem_write;
-    assign {mem_pc, mem_alu_result, mem_wdata, mem_waddr,
+    assign {mem_pc, mem_alu_result, mem_waddr,
             mem_mem_to_reg, mem_reg_write, mem_mem_write} = mem_reg;
 
     // output mem_wb_bus
@@ -68,6 +66,9 @@ module MEM(
     assign mem_ready_go = 1'b1;
     assign mem_allow_in = ~mem_valid | (mem_ready_go & wb_allow_in);
     assign mem_wb_valid = mem_valid & mem_ready_go;
+
+    // output mem_id_bus
+    assign mem_id_bus = {mem_reg_write, mem_waddr, mem_valid, mem_final_result};
 
     always @(posedge clk) begin
         if (rst) begin
@@ -85,13 +86,7 @@ module MEM(
     end
 
     // MEM stage
-    assign mem_final_result = mem_mem_to_reg ? mem_rdata : mem_alu_result;
-
-    // data_mem interface
-    assign data_mem_ena = mem_valid;
-    assign data_mem_addra = mem_alu_result[11:2]; // word aligned
-    assign data_mem_wea = mem_mem_write;
-    assign data_mem_dina = mem_wdata;
     assign mem_rdata = data_mem_douta;
+    assign mem_final_result = mem_mem_to_reg ? mem_rdata : mem_alu_result;
 
 endmodule

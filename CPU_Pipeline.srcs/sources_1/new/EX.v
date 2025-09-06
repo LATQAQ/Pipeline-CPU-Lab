@@ -31,10 +31,19 @@ module EX(
         output ex_allow_in,
         output ex_mem_valid,
 
+        // RAW hazard
+        output [`EX_ID_BUS_WIDTH-1:0] ex_id_bus,
+
         // bus from ID
         input  [`ID_EX_BUS_WIDTH-1:0] id_ex_bus,
         // bus to MEM
-        output [`EX_MEM_BUS_WIDTH-1:0] ex_mem_bus
+        output [`EX_MEM_BUS_WIDTH-1:0] ex_mem_bus,
+
+        // data_mem interface
+        output data_mem_ena,
+        output [9:0] data_mem_addra,
+        output data_mem_wea,
+        output [31:0] data_mem_dina
     );
 
     // pipeline registers
@@ -52,18 +61,18 @@ module EX(
     wire [31:0] ex_rd1;
     wire [31:0] ex_rd2;
     wire [31:0] ex_imm;
+    wire [4:0] ex_shamt;
     wire [4:0] ex_rs;
     wire [4:0] ex_rt;
     wire [4:0] ex_rd;
     assign {ex_pc, ex_alu_control, ex_alu_src, ex_reg_dst, ex_reg31,
             ex_link_en, ex_link_addr, ex_mem_to_reg, ex_reg_write, ex_mem_write,
-            ex_rd1, ex_rd2, ex_imm, ex_rs, ex_rt, ex_rd} = ex_reg;
+            ex_rd1, ex_rd2, ex_imm, ex_shamt, ex_rs, ex_rt, ex_rd} = ex_reg;
 
     // output ex_mem_bus
-    wire [31:0] ex_alu_result;
-    wire [31:0] ex_wdata;
+    wire [31:0] ex_final_result;
     wire [4:0] ex_waddr;
-    assign ex_mem_bus = {ex_pc, ex_alu_result, ex_wdata, ex_waddr,
+    assign ex_mem_bus = {ex_pc, ex_final_result, ex_waddr,
                          ex_mem_to_reg, ex_reg_write, ex_mem_write};
 
     // pipeline control
@@ -73,6 +82,10 @@ module EX(
     assign ex_ready_go = 1'b1;
     assign ex_allow_in = ~ex_valid | (ex_ready_go & mem_allow_in);
     assign ex_mem_valid = ex_valid & ex_ready_go;
+
+    // output ex_id_bus
+    wire ex_is_load;
+    assign ex_id_bus = {ex_reg_write, ex_waddr, ex_valid, ex_final_result, ex_is_load};
 
     always @(posedge clk) begin
         if (rst) begin
@@ -90,27 +103,13 @@ module EX(
     end
 
     // internal signals
+    wire [31:0] ex_alu_result;
     wire [31:0] ex_alu_src2;
 
     // EX stage
-    function [31:0] getALUInput;
-        input [1:0] alu_src;
-        input [31:0] rd;
-        input [31:0] imm;
-        begin
-            case (alu_src)
-                2'b00:
-                    getALUInput = rd;
-                2'b01:
-                    getALUInput = imm;
-                2'b10:
-                    getALUInput = 32'h0000_0004;
-                default:
-                    getALUInput = rd;
-            endcase
-        end
-    endfunction
-    assign ex_alu_src2 = getALUInput(ex_alu_src, ex_rd2, ex_imm);
+    assign ex_alu_src2 = (ex_alu_src == 2'b00) ? ex_rd2 :
+                         (ex_alu_src == 2'b01) ? ex_imm :
+                         (ex_alu_src == 2'b10) ? {27'b0, ex_shamt} : 32'b0;
 
     ALU alu(
             .ALUCtrl(ex_alu_control),
@@ -118,7 +117,16 @@ module EX(
             .SrcB(ex_alu_src2),
             .ALUResult(ex_alu_result)
         );
-    assign ex_wdata = ex_rd2;
+
     assign ex_waddr = ex_reg31 ? 5'b11111 : (ex_reg_dst ? ex_rd : ex_rt);
+    assign ex_final_result = ex_link_en ? ex_link_addr : ex_alu_result;
+
+    // data_mem interface
+    assign data_mem_ena = ex_valid && (ex_mem_write || ex_mem_to_reg);
+    assign data_mem_addra = data_mem_ena ? ex_alu_result[9:0] : 10'b0; // word aligned
+    assign data_mem_wea = ex_mem_write;
+    assign data_mem_dina = ex_rd2;
+
+    assign ex_is_load = ex_mem_to_reg && ex_valid;
 
 endmodule

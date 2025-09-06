@@ -1,12 +1,47 @@
-lui $t0, 0x1ade
-ori $t0, $t0, 0xf300    
-lui $t1, 0x51dd
-ori $t1, $t1, 0x58de    
-lui $v1, 0x6cbc
-ori $v1, $v1, 0x4bde    
-addu $v0, $t0, $t1
-subu $a0, $v1, $t0
-and $a1, $t0, $t1
-or $a2, $t0, $t1
+main:
+        addi $t0, $zero, 0      # i = 0
+        addi $t1, $zero, 10     # limit = 10
+        addi $t2, $zero, 0      # sum = 0
 
+loop:
+        addi $t0, $t0, 1        # i = i + 1
+        add  $t2, $t2, $t0      # sum += i (用 add 组合，等价于 addi+sub 测试)
+
+        # 测试 and / or
+        and  $t3, $t0, $t1      # t3 = i AND limit
+        or   $t4, $t0, $t1      # t4 = i OR  limit
+
+        # slt 测试：判断 i < limit
+        slt  $t5, $t0, $t1      # t5 = (i < limit) ? 1 : 0
+
+        # sll 测试：左移 i
+        sll  $t6, $t0, 2        # t6 = i << 2
+
+        # 用 bne 循环直到 i == limit
+        bne  $t0, $t1, loop
+
+        # 测试 beq：sum == 55 ?
+        addi $t7, $zero, 55
+        beq  $t2, $t7, equal55
+
+        j end                   # 如果不等，直接跳到 end
+
+equal55:
+        jal subroutine          # 调用子程序（测试 jal）
+
+        # 测试 jalr：把返回地址放在 $t9
+        la   $t8, target        # 把跳转目标地址放到 $t8
+        jalr $t9, $t8           # 跳到 target，用 t9 保存返回地址
+
+target:
+        addi $v1, $zero, 456
+        jr   $t9
+
+        
+end:
+
+
+subroutine:
+        addi $v0, $zero, 123    # 返回值
+        jr   $ra                # 返回
 

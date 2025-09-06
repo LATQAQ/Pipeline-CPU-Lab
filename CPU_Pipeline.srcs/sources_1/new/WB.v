@@ -43,16 +43,18 @@ module WB(
     wire wb_reg_write;
     assign {wb_pc, wb_final_result, wb_waddr, wb_reg_write} = wb_reg;
 
-    // output wb_id_bus
-    wire wb_reg_we;
-    assign wb_id_bus = {wb_reg_we, wb_waddr, wb_final_result};
-
     // pipeline control
     reg wb_valid;
     wire wb_ready_go;
+    wire wb_id_valid;
 
     assign wb_ready_go = 1'b1;
     assign wb_allow_in = ~wb_valid | wb_ready_go;
+    assign wb_id_valid = wb_valid & wb_ready_go;
+
+    // output wb_id_bus
+    wire wb_reg_we;
+    assign wb_id_bus = {wb_reg_we, wb_waddr, wb_final_result, wb_valid};
 
     always @(posedge clk) begin
         if (rst) begin

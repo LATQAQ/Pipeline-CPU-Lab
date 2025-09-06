@@ -39,10 +39,12 @@ module ALU(
                 ALUResult <= SrcA + SrcB; // ADD
             5'b00110:
                 ALUResult <= SrcA - SrcB; // SUB
+            5'b01001:
+                ALUResult <= SrcA * SrcB; // MUL
             5'b00111:
                 ALUResult <= (SrcA < SrcB) ? 32'b1 : 32'b0; // SLT
             5'b00011:
-                ALUResult <= SrcA << SrcB[4:0]; // SLL
+                ALUResult <= SrcA << SrcB[4:0]; // SLLV
             5'b01000:
                 ALUResult <= SrcB << 16; // LUI
             default:
