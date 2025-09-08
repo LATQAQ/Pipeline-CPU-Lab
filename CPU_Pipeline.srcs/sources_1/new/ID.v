@@ -345,9 +345,40 @@ module ID(
                                       (inst_bne & (id_rd1 != id_rd2)) |
                                       inst_j | inst_jal | inst_jr | inst_jalr ) && id_ready_go;
 
-    assign id_br_target = (inst_beq || inst_bne) ? id_pc + id_br_offset : (inst_jr || inst_jalr) ? id_rd1 : id_jump_addr;
+    // assign id_br_target = (inst_beq || inst_bne) ? id_pc + id_br_offset : (inst_jr || inst_jalr) ? id_rd1 : id_jump_addr;
+    // assign id_br_cancel = id_valid && id_ready_go && ex_allow_in && id_br_taken;
 
-    assign id_br_cancel = id_valid && id_ready_go && ex_allow_in && id_br_taken;
+    // BTFNT prediction
+    wire predict_taken;
+    assign predict_taken = (inst_beq & id_imm16[15]) | (inst_bne & id_imm16[15]) | inst_j | inst_jal;
+
+    assign id_br_cancel = id_valid && id_ready_go && ex_allow_in && (id_br_taken ^ predict_taken);
+
+    function [31:0] getBrTarget;
+        input id_br_taken;
+        input [31:0] id_pc;
+        input [31:0] id_rd1;
+        input [31:0] id_br_offset;
+        input [31:0] id_jump_addr;
+        input inst_beq, inst_bne, inst_jr, inst_jalr;
+        begin
+            if (id_br_taken) begin
+                if (inst_beq || inst_bne) begin
+                    getBrTarget = id_pc + id_br_offset;
+                end
+                else if (inst_jr || inst_jalr) begin
+                    getBrTarget = id_rd1;
+                end
+                else begin
+                    getBrTarget = id_jump_addr;
+                end
+            end
+            else begin
+                getBrTarget = id_pc;
+            end
+        end
+    endfunction
+    assign id_br_target = getBrTarget(id_br_taken, id_pc, id_rd1, id_br_offset, id_jump_addr, inst_beq, inst_bne, inst_jr, inst_jalr);
 
     assign id_link_en = inst_jal | inst_jalr;
     assign id_link_addr = id_pc_plus4;
